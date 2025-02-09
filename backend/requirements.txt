@@ -1,15 +1,3 @@
-# g4f[all]
-# pydub
-# pillow
-# moviepy
-# opencv-python
-# seewav
-# numpy 
-# pycairo 
-# tqdm
-# assemblyai
-
-
 aiohappyeyeballs==2.4.6
 aiohttp==3.11.12
 aiohttp_socks==0.10.1
@@ -52,6 +40,7 @@ imageio==2.37.0
 imageio-ffmpeg==0.6.0
 itsdangerous==2.2.0
 Jinja2==3.1.5
+jsonify==0.5
 llvmlite==0.44.0
 lxml==5.3.0
 lz4==4.4.3

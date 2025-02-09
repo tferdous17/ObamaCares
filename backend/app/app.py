@@ -34,7 +34,10 @@ def getReel(reel_topic):
     if reel_topic not in topics_to_prompts:
         return jsonify(message="Something went wrong"), 400
 
-    prompts = topics_to_prompts[reel_topic]
+    prompts = topics_to_prompts.get(reel_topic, None)
+    if prompts is None:
+        prompts = None
+        # fetch some shit based on reel topic
     print(f'len of prompts=${len(prompts)}')
     for i in range(REEL_COUNT):
         print(i)

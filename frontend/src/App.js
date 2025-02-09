@@ -121,6 +121,8 @@ const importVideos = (category) => {
 // ];
 
 function Outer({ setHide, category, setCat }) {
+  const [pop, setPop] = useState(false);
+
   return (
     <div className="outer">
       <div className="cornerText">

@@ -197,6 +197,7 @@ html {
 }
 
 .xButton:hover {
+  cursor: pointer;
   color: red;
 }
 
@@ -221,5 +222,6 @@ html {
 }
 
 .card:hover {
+  cursor: pointer;
   border: 1px solid rgb(48, 103, 255);
 }
