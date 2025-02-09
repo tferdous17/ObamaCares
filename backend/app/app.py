@@ -12,6 +12,8 @@ Medical Topics
 '''
 import os
 from flask import Flask
+import shutil
+from flask import request
 from generate import runner as generateReelRunner
 from generate import model as generateScript
 from os import path, mkdir, system
@@ -31,6 +33,55 @@ CORS(app, resources={r"/api/*": {"origins": "http://localhost:3000"}})  # Allow 
 @app.route('/')
 def test():
     return 'Hello world'
+
+@app.route('/api/topics', methods=['POST'])
+def addTopic():
+    try:
+        data = request.get_json()  # Get the JSON payload
+        print(data)
+        new_topic = topics_to_prompts.get(data.get('new_topic'), None)  # Extract the new topic
+        if not new_topic:
+            print('new topic')
+            # create new topic
+            pass
+
+        for i in range(REEL_COUNT):
+            print(i)
+            script = generateScript(new_topic[i])
+            generateReelRunner(
+                script,
+                random.randint(1,3),
+                1, # obama voice?
+                random.randint(1,4), # obama img
+                1,
+                1,
+                random.randint(1,5),
+                random.randint(1,6)
+            )
+
+        video_folder = "./video" 
+        if os.path.exists(video_folder):
+            print("Video folder exists.")
+            new_folder = f"../../frontend/src/videos/{data.get('new_topic')}"
+            if not os.path.exists(new_folder):
+                    os.makedirs(new_folder)
+                    print(f"Created new folder: {new_folder}")
+
+            for filename in os.listdir(video_folder):
+                file_path = os.path.join(video_folder, filename)
+                if os.path.isfile(file_path):  # Ensure it's a file and not a subfolder
+                    shutil.move(file_path, os.path.join(new_folder, filename))
+                    print(f"Moved {filename} to {new_folder}")
+        else:
+            print(f"Video folder {video_folder} does not exist.")
+        return jsonify(message="Topic added successfully"), 201
+        
+        # check video folder, then we mae the folder and move them all in.
+        
+        # Return success message
+        return jsonify(message="Topic added successfully"), 201
+    except Exception as e:
+        return jsonify(message=str(e)), 500
 
 @app.route('/api/reels/<reel_topic>', methods=['GET'])
 def getReel(reel_topic):
