@@ -15,6 +15,7 @@ from generate import runner as generateReelRunner
 from generate import model as generateScript
 from os import path, mkdir, system
 from shutil import rmtree
+from flask_cors import CORS
 from topics_to_prompts import topics_to_prompts
 
 import random
@@ -23,6 +24,7 @@ import jsonify
 REEL_COUNT = 5
 
 app = Flask(__name__)
+CORS(app)  
 
 @app.route('/')
 def test():
