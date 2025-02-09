@@ -21,5 +21,5 @@ topics_to_prompts = {
         "Explain the potential long-term health risks associated with PCOS.",
         "Explain the treatment options for managing PCOS. How can lifestyle changes, medications, and other interventions help control symptoms?"
         ],
-    "diabetes": ["Explain the basics of diabetes in an understandable manner."]
+    "diabetes": ["Explain the basics of diabetes in an understandable manner.", "Explain the basics of diabetes in an brainrot manner."]
 }

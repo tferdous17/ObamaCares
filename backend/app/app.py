@@ -25,11 +25,10 @@ import random
 from flask import jsonify
 
 
-REEL_COUNT = 5
+REEL_COUNT = 2
 
 app = Flask(__name__)
-CORS(app, resources={r"/api/*": {"origins": "http://localhost:3000"}})  # Allow only localhost:3000
-
+CORS(app)
 @app.route('/')
 def test():
     return 'Hello world'
