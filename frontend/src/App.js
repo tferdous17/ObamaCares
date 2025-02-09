@@ -21,6 +21,10 @@ const randomUsers = [
     profilePic: "https://i.pravatar.cc/100?img=4",
     username: "techgenius",
   },
+  {
+    profilePic: "https://i.pravatar.cc/100?img=4",
+    username: "booter",
+  },
 ];
 
 const importVideos = (category) => {
@@ -31,9 +35,9 @@ const importVideos = (category) => {
       .filter((file) => file.includes(`cat${category}/`)) // Filter only the selected category
       .map((file, index) => ({
         url: context(file),
-        username: `user${index + 1}`,
+        username: `${randomUsers[index].username}`,
         profilePic: `https://randomuser.me/api/portraits/thumb/men/${index}.jpg`,
-        description: `Random video #${index + 1}`,
+        description: ` #${index + 1}`,
         song: "Original Sound - Random",
         likes: Math.floor(Math.random() * 10000),
         comments: Math.floor(Math.random() * 500),
@@ -112,9 +116,59 @@ const importVideos = (category) => {
 //   },
 // ];
 
+function Outer({ setHide, category, setCat }) {
+  return (
+    <div className="outer">
+      <div className="cornerText">
+        <p>ObamaCares</p>
+        <button onClick={() => setHide(false)} className="xButton">
+          X
+        </button>
+      </div>
+      <div className="inner">
+        <p className="title"> Select a topic</p>
+        <div className="cards">
+          <button
+            className={`${category === 0 ? "cardActive" : ""} card`}
+            onClick={() => setCat(0)}
+          >
+            {" "}
+            <p>Stress</p>{" "}
+          </button>
+          <button
+            className={`${category === 1 ? "cardActive" : ""} card`}
+            onClick={() => setCat(1)}
+          >
+            {" "}
+            <p>Stroke</p>{" "}
+          </button>
+          <button
+            className={`${category === 2 ? "cardActive" : ""} card`}
+            onClick={() => setCat(2)}
+          >
+            {" "}
+            <p>Pcos</p>{" "}
+          </button>
+          <button
+            className={`card`}
+            // onClick={() => setCat(2)}
+          >
+            {" "}
+            <p>+</p>{" "}
+          </button>
+        </div>
+      </div>
+      <p className="bottomMessage">
+        Enhancing medical literacy one reel at a time
+      </p>
+    </div>
+  );
+}
+
 function App() {
   const [videos, setVideos] = useState([]);
   const [category, setCategories] = useState(0);
+  const [hide, setHide] = useState(true);
   const videoRefs = useRef([]);
 
   // useEffect(() => {
@@ -122,6 +176,7 @@ function App() {
   // }, []);
 
   useEffect(() => {
+    videoRefs.current = []; // Reset refs before updating videos
     setVideos(importVideos(category));
   }, [category]);
 
@@ -129,47 +184,40 @@ function App() {
     const observerOptions = {
       root: null,
       rootMargin: "0px",
-      threshold: 0.8, // Adjust this value to change the scroll trigger point
+      threshold: 0.8,
     };
 
-    // This function handles the intersection of videos
-    const handleIntersection = (entries) => {
+    const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
-          const videoElement = entry.target;
-          videoElement.play();
+          entry.target.play();
         } else {
-          const videoElement = entry.target;
-          videoElement.pause();
+          entry.target.pause();
         }
       });
-    };
+    }, observerOptions);
 
-    const observer = new IntersectionObserver(
-      handleIntersection,
-      observerOptions
-    );
+    // Ensure only valid elements are observed
+    const validRefs = videoRefs.current.filter((ref) => ref instanceof Element);
+    validRefs.forEach((videoRef) => observer.observe(videoRef));
 
-    // We observe each video reference to trigger play/pause
-    videoRefs.current.forEach((videoRef) => {
-      observer.observe(videoRef);
-    });
-
-    // We disconnect the observer when the component is unmounted
-    return () => {
-      observer.disconnect();
-    };
+    return () => observer.disconnect();
   }, [videos]);
 
   // This function handles the reference of each video
   const handleVideoRef = (index) => (ref) => {
-    videoRefs.current[index] = ref;
+    if (ref) {
+      videoRefs.current[index] = ref;
+    }
   };
 
   return (
     <div className="app">
+      {hide && (
+        <Outer setHide={setHide} category={category} setCat={setCategories} />
+      )}
       <div className="container">
-        <TopNavbar className="top-navbar" />
+        <TopNavbar setHide={setHide} className="top-navbar" />
         {/* Here we map over the videos array and create VideoCard components */}
         {videos.map((video, index) => (
           <VideoCard
