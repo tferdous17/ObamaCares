@@ -18,7 +18,7 @@ topics_to_prompts = {
         "Explain what Polycystic Ovary Syndrome (PCOS) is and how it affects the body.",
         "Explain the common symptoms of PCOS and how they can vary between individuals.",
         "Explain the hormonal imbalances associated with PCOS and how they impact menstrual cycles, fertility, and overall health.",
-        "Explain the potential long-term health risks associated with PCOS, such as diabetes, heart disease, and endometrial cancer.",
+        "Explain the potential long-term health risks associated with PCOS.",
         "Explain the treatment options for managing PCOS. How can lifestyle changes, medications, and other interventions help control symptoms?"
         ]
 }
