@@ -175,7 +175,7 @@ def sub_append(font_no, weight=16, color="&H0099ff"):
     with open('tmp/subtitle.ass', 'w') as file:
         file.write(''.join(lines))
 
-    system(f'ffmpeg -hide_banner -loglevel error -i tmp/temporary.mp4 -vf "ass=tmp/subtitle.ass" -c:a copy -c:v libx264 -crf 23 -preset veryfast {time_string}.mp4')
+    system(f'ffmpeg -hide_banner -loglevel error -i tmp/temporary.mp4 -vf "ass=tmp/subtitle.ass" -c:a copy -c:v libx264 -crf 23 -preset veryfast ./video/{time_string}.mp4')
 
 
 def add_aud(videoclip, audioclip):
