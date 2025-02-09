@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import './App.css';
 import VideoCard from './components/VideoCard';
-import BottomNavbar from './components/BottomNavbar';
+// import BottomNavbar from './components/BottomNavbar';
 import TopNavbar from './components/TopNavbar';
 
 // This array holds information about different videos
@@ -50,6 +50,18 @@ const videoUrls = [
     saves: 1037,
     shares: 967,
   },
+  {
+    url: require('./videos/peeVid.mp4'),
+    profilePic: 'https://p16-sign-va.tiktokcdn.com/tos-maliva-avt-0068/4bda52cf3ad31c728153859262c329db~c5_100x100.jpeg?x-expires=1688486400&x-signature=ssUbbCpZFJj6uj33D%2BgtcqxMvgQ%3D',
+    username: 'tasnimFerdous',
+    description: 'locked in',
+    song: 'afro beats',
+    likes: 1003,
+    comments: 240,
+    saves: 0,
+    shares: 0
+
+  }
 ];
 
 function App() {
@@ -119,7 +131,7 @@ function App() {
             autoplay={index === 0}
           />
         ))}
-        <BottomNavbar className="bottom-navbar" />
+        {/* <BottomNavbar className="bottom-navbar" /> */}
       </div>
     </div>
   );

@@ -89,10 +89,6 @@ function FooterRight({ likes, comments, saves, shares, profilePic }) {
         {/* Displaying the number of shares */}
         <p>{shares}</p>
       </div>
-      <div className="sidebar-icon record">
-        {/* Displaying the record icon */}
-        <img src="https://static.thenounproject.com/png/934821-200.png" alt='Record Icon' />
-      </div>
     </div>
   );
 }
