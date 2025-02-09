@@ -10,6 +10,7 @@ Reels:
 Medical Topics
     GET /api/topics
 '''
+import os
 from flask import Flask
 from generate import runner as generateReelRunner
 from generate import model as generateScript
@@ -19,12 +20,13 @@ from flask_cors import CORS
 from topics_to_prompts import topics_to_prompts
 
 import random
-import jsonify
+from flask import jsonify
+
 
 REEL_COUNT = 5
 
 app = Flask(__name__)
-CORS(app)  
+CORS(app, resources={r"/api/*": {"origins": "http://localhost:3000"}})  # Allow only localhost:3000
 
 @app.route('/')
 def test():
@@ -58,6 +60,18 @@ def getReel(reel_topic):
 @app.route('/api/reels/generate/status/<reel_id>', methods=['GET'])
 def fetchStatusOfReelGeneration(reel_id):
     pass
+
+
+TOPICS_DIR = "../../frontend/src/videos"  # Directory where topic folders are stored
+
+@app.route('/api/topics', methods=['GET'])
+def getTopics():
+    try:
+        topics = [folder for folder in os.listdir(TOPICS_DIR) if os.path.isdir(os.path.join(TOPICS_DIR, folder))]
+        formatted_topics = [topic.capitalize() for topic in topics]
+        return jsonify(formatted_topics)  # Using jsonify correctly
+    except Exception as e:
+        return jsonify(message=str(e)), 500  # Corrected use of jsonify
 
 
 def setup():
