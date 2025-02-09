@@ -14,6 +14,7 @@ import requests
 import tempfile
 from pathlib import Path
 from time import *
+import whisper
 
 
 f_dat = open('../api_keys.json','r').read()
@@ -139,7 +140,6 @@ def backdrop_func(buzz):
 
 
 def sub_append(font_no, weight=16, color="&H0099ff"):
-
     fonts = [
         {"name": "Permanant Marker"},
         {"name": "Archivo Black"},
@@ -151,27 +151,52 @@ def sub_append(font_no, weight=16, color="&H0099ff"):
     if 1 <= font_no <= len(fonts):
         font_data = fonts[font_no - 1]
         font = font_data["name"]
-        weight = font_data.get("weight", None)  # Default weight to None if not specified
+        weight = font_data.get("weight", None)
     else:
         font = None
         weight = None
 
-    #adds subtitle
-
-
     time_tup = localtime()
     time_string = strftime("%d_%m_%Y__%H%M%S", time_tup)
+
+    # First, let's convert the Whisper timestamps to the correct format
+    with open('tmp/subs.srt', 'r') as file:
+        lines = file.readlines()
+    
+    with open('tmp/subs.srt', 'w') as file:
+        i = 0
+        while i < len(lines):
+            if lines[i].strip().isdigit():  # Subtitle number
+                file.write(lines[i])
+                i += 1
+                if i >= len(lines):
+                    break
+                    
+                # Handle timestamp line
+                if '-->' in lines[i]:
+                    start, end = lines[i].strip().split(' --> ')
+                    # Convert to required format (00:00:ss.mmm)
+                    start = float(start)
+                    end = float(end)
+                    formatted_start = f"00:00:{start:06.3f}"
+                    formatted_end = f"00:00:{end:06.3f}"
+                    file.write(f"{formatted_start} --> {formatted_end}\n")
+                i += 1
+            else:
+                file.write(lines[i])
+                i += 1
 
     system(f"ffmpeg -hide_banner -loglevel error -i tmp/subs.srt tmp/subtitle.ass")
     ass_file_path = 'tmp/subtitle.ass'
     new_style_definition = f'Style: Default,{font},{weight},{color},&Hffffff,&H0,&H0,1,0,0,0,100,100,0,0,1,1,2,5,50,50,50,1\n'
 
     with open(ass_file_path, 'r', encoding='utf-8') as file:
-         lines = file.readlines()
+        lines = file.readlines()
 
     for line in lines:
         if line.strip().startswith('Style:'):
             lines[(lines.index(line))]=new_style_definition
+            
     with open('tmp/subtitle.ass', 'w') as file:
         file.write(''.join(lines))
 
@@ -201,45 +226,44 @@ def model(buzz):
 
 def voice_charecter(chr, trs, caps):
 
-    #generates voice
-    characters = ["Dan", "Will", "Scarlett", "Liv", "Amy"]
-    if 1 <= chr <= len(characters):
-        character = characters[chr - 1]
-    else:
-        character = None
-
-
-    url = "https://api.v6.unrealspeech.com/speech"
-
-    payload = {
-        "Text": trs,
-        "VoiceId": character,
-        "Bitrate": "192k",
-        "Speed": "0",
-        "Pitch": "1",
-        "TimestampType": caps
-    }
+    url = "https://api.neets.ai/v1/tts"
     headers = {
-        "accept": "application/json",
-        "content-type": "application/json",
-        "Authorization": f"Bearer {urs_api}"
+        "Content-Type": "application/json",
+        "X-API-Key": "fe649ab20589489f8d8c3bc18bd7e59b"
+    }
+    payload = {
+        "text": trs,
+        "voice_id": 'barack-obama',
+        "params": {
+            "model": "ar-diff-50k"
+        }
     }
 
-    response = requests.post(url, json=payload, headers=headers)
-    sleep(5)
+    response = requests.post(url, headers=headers, json=payload)
+    with open(f"tmp/output.mp3", "wb") as audio_file:
+        audio_file.write(response.content)
+        
+    if response.status_code != 200:
+        raise Exception(f"Server responded with status code {response.status_code}: {response.text}")
+    
+    print('----- Audio')
+    model = whisper.load_model("turbo")
+    result = model.transcribe("tmp/output.mp3")
+    with open("tmp/subs.srt", "w") as f:
+        for i, segment in enumerate(result["segments"]):
+            f.write(f"{i+1}\n")
+            f.write(f"{segment['start']:.2f} --> {segment['end']:.2f}\n")
+            f.write(f"{segment['text']}\n\n")
+    # res = json.loads(response.text)
+    # voiceover = requests.get(res["OutputUri"])
+    # with open("tmp/output.mp3", 'wb') as f:
+    #     for i in voiceover :
+    #         f.write(i)
 
-    print('-----')
-    print(response.text)
-    res = json.loads(response.text)
-    voiceover = requests.get(res["OutputUri"])
-    with open("tmp/output.mp3", 'wb') as f:
-        for i in voiceover :
-            f.write(i)
-
-    subs = requests.get(res["TimestampsUri"])
-    with open("tmp/subs.json", 'wb') as f:
-        for i in subs :
-            f.write(i)
+    # subs = requests.get(res["TimestampsUri"])
+    # with open("tmp/subs.json", 'wb') as f:
+    #     for i in subs :
+    #         f.write(i)
 
 
 
@@ -266,7 +290,7 @@ def runner(script, music, voices, backdrop, charecter, subType, font, colour):
         voice_charecter(voices, script, "sentance")
 
     print('\n'+'[*] Voice and Subtitles Generated\n')
-    json_to_srt('tmp/subs.json', 'tmp/subs.srt' )
+    # json_to_srt('tmp/subs.json', 'tmp/subs.srt' )
 
 
     bckdrp = backdrop_func(backdrop)
