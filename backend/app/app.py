@@ -36,24 +36,22 @@ def getReel(reel_topic):
     if reel_topic not in topics_to_prompts:
         return jsonify(message="Something went wrong"), 400
 
-    prompts = topics_to_prompts.get(reel_topic, None)
-    if prompts is None:
-        prompts = None
-        # fetch some shit based on reel topic
+    prompts = topics_to_prompts[reel_topic]
     print(f'len of prompts=${len(prompts)}')
-    for i in range(REEL_COUNT):
+    for i in range(5):
         print(i)
         script = generateScript(prompts[i])
         generateReelRunner(
             script,
             random.randint(1,3),
-            1, # obama voice?
+            random.randint(1,5), # obama voice?
             random.randint(1,4), # obama img
             1,
             1,
             random.randint(1,5),
             random.randint(1,6)
         )
+    return 'ok'
 
 @app.route('/api/reels/generate/status/<reel_id>', methods=['GET'])
 def fetchStatusOfReelGeneration(reel_id):
