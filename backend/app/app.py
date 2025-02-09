@@ -41,8 +41,8 @@ def addTopic():
         print(data)
         new_topic = topics_to_prompts.get(data.get('new_topic'), None)  # Extract the new topic
         if not new_topic:
-            print('new topic')
-            # create new topic
+            new_topic = [""]
+            # create new topic and put into theres
             pass
 
         for i in range(REEL_COUNT):

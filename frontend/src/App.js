@@ -58,6 +58,7 @@ function Outer({ setHide, category, setCat }) {
   const [pop, setPop] = useState(false);
   const [topics, setTopics] = useState([]);
   const [inputTxt, setInputTxt] = useState("");
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     fetch("http://127.0.0.1:5000/api/topics") // Backend URL
@@ -86,7 +87,7 @@ function Outer({ setHide, category, setCat }) {
       <div className="inner">
         <p className="title"> Select a topic</p>
         <div className="cards">
-          {!pop ? (
+          {!loading && !pop ? (
             formattedTopics.map((topic) => (
               <button
                 key={topic}
@@ -106,17 +107,20 @@ function Outer({ setHide, category, setCat }) {
               className="newTopic"
             ></input>
           )}
+          {loading && <div>loading....</div>}
           <div>
             <button
+              disabled={loading}
               className={`card`}
-              onClick={() => {
+              onClick={async () => {
                 setPop(!pop);
 
                 if (pop) {
                   console.log("submit");
                   if (inputTxt.trim()) {
+                    setLoading(true);
                     // Send inputTxt to the backend to add the new topic
-                    fetch("http://127.0.0.1:5000/api/topics", {
+                    await fetch("http://127.0.0.1:5000/api/topics", {
                       method: "POST",
                       headers: {
                         "Content-Type": "application/json",
@@ -136,6 +140,7 @@ function Outer({ setHide, category, setCat }) {
                       );
                   }
                 }
+                setLoading(false);
                 setInputTxt("");
               }}
             >

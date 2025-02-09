@@ -381,12 +381,12 @@ def main():
         random.randint(1, 6)) # random background color
 
 
-
-    delr=input("delete all non essential files? (y/n) : ")
-    if delr=="y" :
-        rmtree("tmp/")
-    if delr=="n" :
-        pass
+    rmtree("tmp/")
+    # delr=input("delete all non essential files? (y/n) : ")
+    # if delr=="y" :
+    #     rmtree("tmp/")
+    # if delr=="n" :
+    #     pass
 
 # if __name__ == "__main__":
 #     _is_main = True
