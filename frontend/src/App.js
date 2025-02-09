@@ -22,8 +22,12 @@ const randomUsers = [
     username: "techgenius",
   },
   {
-    profilePic: "https://i.pravatar.cc/100?img=4",
+    profilePic: "https://i.pravatar.cc/100?img=5",
     username: "booter",
+  },
+  {
+    profilePic: "https://i.pravatar.cc/100?img=6",
+    username: "dudeyloo",
   },
 ];
 
@@ -32,7 +36,7 @@ const importVideos = (category) => {
     const context = require.context("./videos", true, /\.mp4$/);
     return context
       .keys()
-      .filter((file) => file.includes(`cat${category}/`)) // Filter only the selected category
+      .filter((file) => file.includes(`${category}/`)) // Filter only the selected category
       .map((file, index) => ({
         url: context(file),
         username: `${randomUsers[index].username}`,
@@ -129,22 +133,22 @@ function Outer({ setHide, category, setCat }) {
         <p className="title"> Select a topic</p>
         <div className="cards">
           <button
-            className={`${category === 0 ? "cardActive" : ""} card`}
-            onClick={() => setCat(0)}
+            className={`${category === "stress" ? "cardActive" : ""} card`}
+            onClick={() => setCat("stress")}
           >
             {" "}
             <p>Stress</p>{" "}
           </button>
           <button
-            className={`${category === 1 ? "cardActive" : ""} card`}
-            onClick={() => setCat(1)}
+            className={`${category === "stroke" ? "cardActive" : ""} card`}
+            onClick={() => setCat("stroke")}
           >
             {" "}
             <p>Stroke</p>{" "}
           </button>
           <button
-            className={`${category === 2 ? "cardActive" : ""} card`}
-            onClick={() => setCat(2)}
+            className={`${category === "pcos" ? "cardActive" : ""} card`}
+            onClick={() => setCat("pcos")}
           >
             {" "}
             <p>Pcos</p>{" "}
@@ -167,7 +171,7 @@ function Outer({ setHide, category, setCat }) {
 
 function App() {
   const [videos, setVideos] = useState([]);
-  const [category, setCategories] = useState(0);
+  const [category, setCategories] = useState("stress");
   const [hide, setHide] = useState(true);
   const videoRefs = useRef([]);
 
