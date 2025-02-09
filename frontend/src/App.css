@@ -201,6 +201,12 @@ html {
   color: red;
 }
 
+.newTopic {
+  border: 1px solid rgb(0, 0, 0);
+  border-radius: 5px;
+  padding: 5px;
+}
+
 .card {
   padding: 15px;
   border: 1px solid black;
