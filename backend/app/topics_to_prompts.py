@@ -20,5 +20,6 @@ topics_to_prompts = {
         "Explain the hormonal imbalances associated with PCOS and how they impact menstrual cycles, fertility, and overall health.",
         "Explain the potential long-term health risks associated with PCOS.",
         "Explain the treatment options for managing PCOS. How can lifestyle changes, medications, and other interventions help control symptoms?"
-        ]
+        ],
+    "diabetes": ["Explain the basics of diabetes in an understandable manner."]
 }
