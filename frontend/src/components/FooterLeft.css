@@ -1,0 +1,38 @@
+.footer-container {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 0px; /* Removed extra space */
+  position: absolute;
+  bottom: 10px; /* Move it closer to the bottom */
+  left: 10px;
+  right: 10px;
+}
+
+.footer-left {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end; /* Pushes username lower */
+  align-items: flex-start;
+  margin-left: 5px;
+  flex-grow: 0;
+}
+
+.text {
+  width: 100%;
+}
+
+.text h3 {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 2px;
+  position: relative;
+  bottom: -5px; /* Moves username slightly lower */
+  color: white;
+}
+
+.text p {
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 5px;
+  color:white;
+}
