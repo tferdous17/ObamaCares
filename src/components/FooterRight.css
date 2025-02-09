@@ -1,9 +1,12 @@
 .footer-right {
+  position: absolute;  /* Positions it on the screen */
+  right: 10px;         /* Aligns it to the right */
+  bottom: 0%;         /* Adjust as needed */
   z-index: 100;
   color: #fff;
   margin-right: 5px;
-  margin-bottom: 25px;
 }
+
 
 .sidebar-icon {
   display: flex;
